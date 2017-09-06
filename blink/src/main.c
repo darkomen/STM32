@@ -92,22 +92,28 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
-  int state = 0;
+  uint8_t state = 0;
+  long previous_millis = 0;
+  long actual_millis = 0;
+  long cicle_time = 1000; // [ms]
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-  if (state == 0){
-    GPIOA->BSRR = 1;
-    state ^= 0x01;
-  }
-  else{
-    GPIOA->BSRR = 1 << 16;
-    state ^= 0x01;
-  }
-  /* USER CODE END WHILE */
+  while (1){
+    actual_millis = HAL_GetTick();
+    if (actual_millis - previous_millis >= cicle_time){
+      if (state == 0){
+        GPIOA->BSRR = 1;
+        state ^= 0x01;
+      }
+      else{
+        GPIOA->BSRR = 1 << 16;
+        state ^= 0x01;
+      }
+      previous_millis = HAL_GetTick();
+    }
+    /* USER CODE END WHILE */
 
-  /* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
 
   }
   /* USER CODE END 3 */
